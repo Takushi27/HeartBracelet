@@ -6,20 +6,21 @@
 
 int pulsePin = 0;    
 
-const char *ssid = "";
-const char *password = ""; 
+const char *ssid = "MIT-ROSA 2.4G";
+const char *password = "ace2019@"; 
 
 volatile int BPM;                   
 volatile int Signal;                
-volatile int IBI = 600;             
+volatile int IBI = 150;             
 volatile boolean Pulse = false;  
 volatile boolean QS = false;
+
 volatile int rate[10];                      
 volatile unsigned long sampleCounter = 0;   
 volatile unsigned long lastBeatTime = 0;    
-volatile int P = 300;                       
-volatile int T = 300;                       
-volatile int thresh = 550;                  
+volatile int P = 150;                       
+volatile int T = 150;                       
+volatile int thresh = 150;                  
 volatile int amp = 100;                     
 volatile boolean firstBeat = true;          
 volatile boolean secondBeat = false;
@@ -29,14 +30,14 @@ hw_timer_t *timer = NULL;
 WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "pool.ntp.org", -3 * 3600, 60000);
 
-#define PROJECT_ID ""
-#define API_KEY ""
-#define URL ""
+#define PROJECT_ID "pulseira-cdce8"
+#define API_KEY "AIzaSyAN1in03ZX4YCGgtWhTSamJh0KhOzEqPRs"
+#define URL "https://pulseira-cdce8-default-rtdb.firebaseio.com/"
 
 FirebaseData fbdo;
 FirebaseAuth auth;
 FirebaseConfig config;
-const unsigned long saveDuration = 120000;
+const unsigned long saveDuration = 100000;
 unsigned long lastSaveTime = 0;
 
 unsigned long sendDataPrevMillis = 0;
@@ -144,7 +145,7 @@ void setup() {
   timerAttachInterrupt(timer, &detectHeartBeat, true);  
   timerAlarmWrite(timer, 2000, true);  
   timerAlarmEnable(timer);  
-}
+} 
 
 void connection(){
   if (WiFi.status() != WL_CONNECTED) {
@@ -155,7 +156,7 @@ void connection(){
   }
 }
 
-void firebaseDates() {
+void firebaseStatus() {
   if (QS == true) {
     Serial.print("Heart-Beat Found ");
     Serial.print("BPM: ");
@@ -224,6 +225,6 @@ void firebaseDates() {
 void loop(){
   connection();
   delay(2000);
-  firebaseDates();
+  firebaseStatus();
 }
   
